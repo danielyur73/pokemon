@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=>, initial-scale=1.0">
+    
     <title>Document</title>
 </head>
 
@@ -20,19 +20,32 @@
             var api = `https://pokeapi.co/api/v2/pokemon/${id}`
             return api
         }
-        function get_all_pokemon(){
-            var pokemons=[]
-                for (var index = 1; index <=151; index++) {
-                    pokemons.push(fetch(get_pokemon(index)).then(response=>response.json()))
 
-                    
+        function get_all_pokemon() {
+            var pokemons = []
+            for (var index = 1; index <= 151; index++) {
+                pokemons.push(fetch(get_pokemon(index)).then(response => response.json()))
+
+
+            }
+            Promise.all(pokemons).then(pokemons => {
+            pokemons.reduce(
+                (html,pokemon)=>{
+                    var tipo=pokemon.types.map(typeinfor=>typeinfor.type.name)
+                    html+=`
+                        <li>
+                            <h2>${pokemon.name}</h2>
+                        </li>
+                    `
+                    document.querySelector('[data-js="pokedex"]').innerHTML+=html
+
                 }
-                Promise.all(pokemons).then(pokemons=>console.log(pokemons))
-            
+            )
+
+            })
+
         }
         get_all_pokemon()
-        
-        
     </script>
 
 </body>
